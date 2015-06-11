@@ -26,7 +26,7 @@ else
 gem "nokogiri"
 end
 gem "open-uri-cached"
-if RUBY_VERSION >= "2.0"
+if RUBY_VERSION > "1.9"
   gem "prawn"
 else
   gem "prawn", "1.3.0"

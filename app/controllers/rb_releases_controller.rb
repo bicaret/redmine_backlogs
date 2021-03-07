@@ -48,7 +48,7 @@ class RbReleasesController < RbApplicationController
 
   def update
     except = ['id', 'project_id']
-    attribs = params.select{|k,v| (!except.include? k) and (RbRelease.column_names.include? k) }
+    attribs = params.to_unsafe_h.select{|k,v| (!except.include? k) and (RbRelease.column_names.include? k) }
     attribs = Hash[*attribs.flatten]
     begin
       result  = @release.update_attributes attribs

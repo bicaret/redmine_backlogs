@@ -7,7 +7,7 @@ class RbTasksController < RbApplicationController
     @settings = Backlogs.settings
     @task = nil
     begin
-      @task  = RbTask.create_with_relationships(params, User.current.id, @project.id)
+      @task  = RbTask.create_with_relationships(tasks_params.to_unsafe_h, User.current.id, @project.id)
     rescue => e
       render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
@@ -23,9 +23,9 @@ class RbTasksController < RbApplicationController
   end
 
   def update
-    @task = RbTask.find_by_id(params[:id])
+    @task = RbTask.find_by_id(tasks_params[:id])
     @settings = Backlogs.settings
-    result = @task.update_with_relationships(params)
+    result = @task.update_with_relationships(tasks_params.to_unsafe_h)
     status = (result ? 200 : 400)
     @include_meta = true
 
@@ -36,4 +36,8 @@ class RbTasksController < RbApplicationController
     end
   end
 
+  private
+    def tasks_params
+      params.permit(:id, :subject, :description, :assigned_to_id, :priority_id, :remaining_hours, :parent_issue_id, :status_id, :project_id)
+    end
 end
